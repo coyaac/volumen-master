@@ -33,6 +33,30 @@
             android:textSize="18sp" />
     </RelativeLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp">
+
+        <TextView
+            android:id="@+id/lock_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Candado"
+            android:textColor="#1A1A1C"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <Switch
+            android:id="@+id/sw_lock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_marginTop="8dp" android:text="Multimedia" android:textColor="#2D2D35" android:textSize="13sp" />
     <SeekBar android:id="@+id/sb_music" android:layout_width="match_parent" android:layout_height="wrap_content" />
