@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccessibilityNew
 import androidx.compose.material.icons.rounded.BatterySaver
+import androidx.compose.material.icons.rounded.DoNotDisturbOn
 import androidx.compose.material.icons.rounded.RestartAlt
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -35,12 +36,14 @@ import com.volumelock.ui.components.Banner
 fun PermissionsScreen(viewModel: VolumeViewModel, modifier: Modifier = Modifier) {
     var accessibility by remember { mutableStateOf(viewModel.isAccessibilityEnabled()) }
     var battery by remember { mutableStateOf(viewModel.isBatteryUnrestricted()) }
+    var dnd by remember { mutableStateOf(viewModel.isDndAccessGranted()) }
     val reactivateOnBoot by viewModel.reactivateOnBoot.collectAsStateWithLifecycle()
 
     // Al volver de Ajustes, re-evalúa el estado para que los avisos se resuelvan solos.
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
         accessibility = viewModel.isAccessibilityEnabled()
         battery = viewModel.isBatteryUnrestricted()
+        dnd = viewModel.isDndAccessGranted()
     }
 
     Column(
@@ -73,6 +76,15 @@ fun PermissionsScreen(viewModel: VolumeViewModel, modifier: Modifier = Modifier)
             icon = Icons.Rounded.BatterySaver,
             actionLabel = "Abrir ajustes",
             onAction = viewModel::requestIgnoreBatteryOptimizations,
+        )
+
+        Banner(
+            title = if (dnd) "Acceso a No molestar concedido" else "Falta acceso a No molestar",
+            body = if (dnd) "VolumeLock puede fijar el volumen de llamada y notificación." else "Sin este acceso, VolumeLock no puede fijar el volumen de llamada ni notificación (multimedia y alarma sí).",
+            resolved = dnd,
+            icon = Icons.Rounded.DoNotDisturbOn,
+            actionLabel = "Abrir ajustes",
+            onAction = viewModel::openDndAccessSettings,
         )
 
         Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)) {

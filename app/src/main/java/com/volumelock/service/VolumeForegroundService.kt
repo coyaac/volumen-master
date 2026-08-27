@@ -107,7 +107,7 @@ class VolumeForegroundService : Service() {
 
             if (debeRevertir) {
                 selfSet[stream] = target!!
-                audioManager.setStreamVolume(stream, target, 0)
+                audioManager.setStreamVolumeSafe(stream, target, 0)
             }
 
             dao.insertAndTrim(

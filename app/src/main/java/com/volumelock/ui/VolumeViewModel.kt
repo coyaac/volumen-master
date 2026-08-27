@@ -12,6 +12,7 @@ import com.volumelock.data.VolumeLogEntity
 import com.volumelock.data.VolumeRepository
 import com.volumelock.data.VolumeStream
 import com.volumelock.service.VolumeAccessibilityService
+import com.volumelock.service.setStreamVolumeSafe
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -52,7 +53,7 @@ class VolumeViewModel(app: Application) : AndroidViewModel(app) {
     fun setTargetVolume(stream: VolumeStream, value: Int) {
         viewModelScope.launch {
             repository.setTargetVolume(stream, value)
-            if (lockState.value) audioManager.setStreamVolume(stream.androidStreamType, value, 0)
+            if (lockState.value) audioManager.setStreamVolumeSafe(stream.androidStreamType, value, 0)
         }
     }
 
@@ -76,6 +77,16 @@ class VolumeViewModel(app: Application) : AndroidViewModel(app) {
         ) ?: return false
         val name = "${getApplication<Application>().packageName}/${VolumeAccessibilityService::class.java.name}"
         return enabled.split(':').any { it.equals(name, ignoreCase = true) }
+    }
+
+    /** Acceso a la política de No molestar: necesario para fijar llamada/notificación. */
+    fun isDndAccessGranted(): Boolean {
+        val nm = getApplication<Application>().getSystemService(android.app.NotificationManager::class.java)
+        return nm.isNotificationPolicyAccessGranted
+    }
+
+    fun openDndAccessSettings() {
+        launchSettings(Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS))
     }
 
     fun isBatteryUnrestricted(): Boolean {
