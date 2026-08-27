@@ -8,8 +8,8 @@ plugins {
     alias(libs.plugins.android.junit5)
 }
 
-// Firma release opcional: solo si existe keystore.properties (no versionado).
-val keystorePropsFile = rootProject.file("keystore.properties")
+// Firma release opcional: los secretos viven en .env.local (no versionado).
+val keystorePropsFile = rootProject.file(".env.local")
 val keystoreProps = Properties().apply {
     if (keystorePropsFile.exists()) load(keystorePropsFile.inputStream())
 }

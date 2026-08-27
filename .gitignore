@@ -11,6 +11,7 @@ local.properties
 *.apk
 *.keystore
 !debug.keystore
-# Secretos de firma release — nunca versionar
+# Secretos locales (firma release, etc.) — nunca versionar
 *.jks
+.env.local
 keystore.properties
