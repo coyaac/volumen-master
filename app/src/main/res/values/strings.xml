@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">VolumeLock</string>
+    <string name="accessibility_service_description">Permite a VolumeLock detectar y bloquear las teclas físicas de volumen mientras el candado está activo.</string>
 </resources>
