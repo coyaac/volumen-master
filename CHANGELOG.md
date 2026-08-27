@@ -2,6 +2,17 @@
 
 Todas las versiones notables de VolumeLock. Formato basado en Keep a Changelog.
 
+## [0.3.0] — 2026-08-27
+
+### Añadido
+- El **globo flotante** ahora trae interruptor de candado, se vuelve semitransparente
+  en reposo, se imanta al borde más cercano al soltarlo y se elimina arrastrándolo a
+  la zona inferior central. Movimiento animado.
+
+### Corregido
+- Ajustar el volumen desde el globo con el candado activo ya no "rebota": el objetivo
+  se actualiza antes de aplicar el cambio, así el servicio de restauración lo respeta.
+
 ## [0.2.0] — 2026-08-27
 
 ### Añadido
