@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccessibilityNew
+import androidx.compose.material.icons.rounded.Adjust
 import androidx.compose.material.icons.rounded.BatterySaver
 import androidx.compose.material.icons.rounded.DoNotDisturbOn
 import androidx.compose.material.icons.rounded.RestartAlt
@@ -38,6 +39,7 @@ fun PermissionsScreen(viewModel: VolumeViewModel, modifier: Modifier = Modifier)
     var battery by remember { mutableStateOf(viewModel.isBatteryUnrestricted()) }
     var dnd by remember { mutableStateOf(viewModel.isDndAccessGranted()) }
     val reactivateOnBoot by viewModel.reactivateOnBoot.collectAsStateWithLifecycle()
+    val bubbleEnabled by viewModel.bubbleEnabled.collectAsStateWithLifecycle()
 
     // Al volver de Ajustes, re-evalúa el estado para que los avisos se resuelvan solos.
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
@@ -102,6 +104,24 @@ fun PermissionsScreen(viewModel: VolumeViewModel, modifier: Modifier = Modifier)
                     )
                 }
                 Switch(checked = reactivateOnBoot, onCheckedChange = viewModel::setReactivateOnBoot)
+            }
+        }
+
+        Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)) {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(Icons.Rounded.Adjust, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                Column(modifier = Modifier.weight(1f).padding(horizontal = 16.dp)) {
+                    Text("Globo flotante de volumen", style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        "Un globo sobre las demás apps para ajustar el volumen sin abrir VolumeLock.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                Switch(checked = bubbleEnabled, onCheckedChange = viewModel::setBubbleEnabled)
             }
         }
     }

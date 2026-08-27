@@ -11,6 +11,7 @@ import com.volumelock.data.VolumeLogDatabase
 import com.volumelock.data.VolumeLogEntity
 import com.volumelock.data.VolumeRepository
 import com.volumelock.data.VolumeStream
+import com.volumelock.service.BubbleService
 import com.volumelock.service.VolumeAccessibilityService
 import com.volumelock.service.setStreamVolumeSafe
 import kotlinx.coroutines.flow.Flow
@@ -41,6 +42,34 @@ class VolumeViewModel(app: Application) : AndroidViewModel(app) {
 
     fun setReactivateOnBoot(enabled: Boolean) {
         viewModelScope.launch { repository.setReactivateOnBoot(enabled) }
+    }
+
+    val bubbleEnabled: StateFlow<Boolean> =
+        repository.bubbleEnabled.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
+
+    fun canDrawOverlays(): Boolean =
+        Settings.canDrawOverlays(getApplication())
+
+    fun requestOverlayPermission() {
+        launchSettings(
+            Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                android.net.Uri.parse("package:${getApplication<Application>().packageName}")
+            )
+        )
+    }
+
+    /** Activa/desactiva el globo flotante. Requiere permiso de overlay para activarlo. */
+    fun setBubbleEnabled(enabled: Boolean) {
+        val app = getApplication<Application>()
+        if (enabled && !canDrawOverlays()) {
+            requestOverlayPermission()
+            return
+        }
+        viewModelScope.launch {
+            repository.setBubbleEnabled(enabled)
+            if (enabled) BubbleService.start(app) else BubbleService.stop(app)
+        }
     }
 
     fun maxVolume(stream: VolumeStream): Int = audioManager.getStreamMaxVolume(stream.androidStreamType)

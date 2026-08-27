@@ -15,11 +15,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 private enum class Tab(val label: String) { LOCK("Candado"), LOG("Historial"), SETTINGS("Ajustes") }
@@ -28,6 +30,12 @@ private enum class Tab(val label: String) { LOCK("Candado"), LOG("Historial"), S
 @Composable
 fun VolumeLockApp(viewModel: VolumeViewModel = viewModel()) {
     var tab by remember { mutableStateOf(Tab.LOCK) }
+
+    // Reactiva el globo al abrir la app si quedó activado y hay permiso de overlay.
+    val bubbleOn by viewModel.bubbleEnabled.collectAsStateWithLifecycle()
+    LaunchedEffect(bubbleOn) {
+        if (bubbleOn && viewModel.canDrawOverlays()) viewModel.setBubbleEnabled(true)
+    }
 
     Scaffold(
         topBar = {

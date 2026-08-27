@@ -39,6 +39,13 @@ class VolumeRepository(private val dataStore: DataStore<Preferences>) {
         dataStore.edit { it[REACTIVATE_ON_BOOT_KEY] = enabled }
     }
 
+    /** Si el globo flotante de volumen está activo. */
+    val bubbleEnabled: Flow<Boolean> = dataStore.data.map { it[BUBBLE_ENABLED_KEY] ?: false }
+
+    suspend fun setBubbleEnabled(enabled: Boolean) {
+        dataStore.edit { it[BUBBLE_ENABLED_KEY] = enabled }
+    }
+
     suspend fun setLockState(active: Boolean) {
         dataStore.edit {
             it[LOCK_KEY] = active
@@ -65,6 +72,7 @@ class VolumeRepository(private val dataStore: DataStore<Preferences>) {
         private val LOCK_KEY = booleanPreferencesKey("lock_active")
         private val LOCK_SINCE_KEY = androidx.datastore.preferences.core.longPreferencesKey("lock_since")
         private val REACTIVATE_ON_BOOT_KEY = booleanPreferencesKey("reactivate_on_boot")
+        private val BUBBLE_ENABLED_KEY = booleanPreferencesKey("bubble_enabled")
         private fun targetKey(stream: VolumeStream) = intPreferencesKey("target_${stream.name}")
     }
 }
