@@ -32,6 +32,13 @@ class VolumeRepository(private val dataStore: DataStore<Preferences>) {
     /** Instante (epoch millis) en que se activó el candado, o null si está inactivo. */
     val lockSince: Flow<Long?> = dataStore.data.map { it[LOCK_SINCE_KEY] }
 
+    /** Si el candado debe reactivarse tras reiniciar el dispositivo (HU07). */
+    val reactivateOnBoot: Flow<Boolean> = dataStore.data.map { it[REACTIVATE_ON_BOOT_KEY] ?: false }
+
+    suspend fun setReactivateOnBoot(enabled: Boolean) {
+        dataStore.edit { it[REACTIVATE_ON_BOOT_KEY] = enabled }
+    }
+
     suspend fun setLockState(active: Boolean) {
         dataStore.edit {
             it[LOCK_KEY] = active
@@ -57,6 +64,7 @@ class VolumeRepository(private val dataStore: DataStore<Preferences>) {
     companion object {
         private val LOCK_KEY = booleanPreferencesKey("lock_active")
         private val LOCK_SINCE_KEY = androidx.datastore.preferences.core.longPreferencesKey("lock_since")
+        private val REACTIVATE_ON_BOOT_KEY = booleanPreferencesKey("reactivate_on_boot")
         private fun targetKey(stream: VolumeStream) = intPreferencesKey("target_${stream.name}")
     }
 }

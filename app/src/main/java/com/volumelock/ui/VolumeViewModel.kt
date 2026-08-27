@@ -35,6 +35,13 @@ class VolumeViewModel(app: Application) : AndroidViewModel(app) {
 
     val history: Flow<List<VolumeLogEntity>> = logDao.getAll()
 
+    val reactivateOnBoot: StateFlow<Boolean> =
+        repository.reactivateOnBoot.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
+
+    fun setReactivateOnBoot(enabled: Boolean) {
+        viewModelScope.launch { repository.setReactivateOnBoot(enabled) }
+    }
+
     fun maxVolume(stream: VolumeStream): Int = audioManager.getStreamMaxVolume(stream.androidStreamType)
     fun currentVolume(stream: VolumeStream): Int = audioManager.getStreamVolume(stream.androidStreamType)
 
