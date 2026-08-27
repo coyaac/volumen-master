@@ -2,4 +2,7 @@
 <resources>
     <string name="app_name">VolumeLock</string>
     <string name="accessibility_service_description">Permite a VolumeLock detectar y bloquear las teclas físicas de volumen mientras el candado está activo.</string>
+    <string name="fgs_channel_name">Estado del candado</string>
+    <string name="fgs_estado_bloqueado">🔒 Candado activo — volumen protegido</string>
+    <string name="fgs_estado_desbloqueado">🔓 Candado inactivo — monitoreando cambios</string>
 </resources>
