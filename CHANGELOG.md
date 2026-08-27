@@ -2,6 +2,19 @@
 
 Todas las versiones notables de VolumeLock. Formato basado en Keep a Changelog.
 
+## [0.2.0] — 2026-08-27
+
+### Añadido
+- **Globo flotante de volumen** (estilo chat-head): un globo arrastrable sobre las
+  demás apps que se despliega en un panel con los 4 sliders de volumen. Requiere el
+  permiso "mostrar sobre otras apps".
+- Permiso de acceso a **No molestar**, necesario para fijar el volumen de llamada y
+  notificación (con aviso en Ajustes).
+
+### Corregido
+- La app ya no se cierra al ajustar el volumen de **llamada o notificación**: se
+  atrapa la `SecurityException` de No molestar (`setStreamVolumeSafe`).
+
 ## [0.1.0] — 2026-08-27
 
 Primera versión funcional (uso personal, sideload).
