@@ -1,0 +1,185 @@
+/* Paletas tonales Material 3 — generadas en OKLCH desde la semilla #4A4FA6 */
+:root {
+
+  /* primary */
+  --md-primary-0: #000000;
+  --md-primary-4: #000002;
+  --md-primary-6: #010005;
+  --md-primary-10: #03020f;
+  --md-primary-12: #050316;
+  --md-primary-17: #0e0a27;
+  --md-primary-20: #141032;
+  --md-primary-22: #181439;
+  --md-primary-24: #1d1841;
+  --md-primary-30: #2b2458;
+  --md-primary-40: #433b82;
+  --md-primary-50: #5d53ae;
+  --md-primary-60: #7974c7;
+  --md-primary-70: #9896da;
+  --md-primary-80: #b8b8ed;
+  --md-primary-87: #d0d0f9;
+  --md-primary-90: #dadaff;
+  --md-primary-92: #e1e1ff;
+  --md-primary-94: #e8e8ff;
+  --md-primary-95: #ebecff;
+  --md-primary-96: #efefff;
+  --md-primary-98: #f6f6ff;
+  --md-primary-99: #f9faff;
+  --md-primary-100: #ffffff;
+
+  /* secondary */
+  --md-secondary-0: #000000;
+  --md-secondary-4: #000001;
+  --md-secondary-6: #010102;
+  --md-secondary-10: #030306;
+  --md-secondary-12: #05050a;
+  --md-secondary-17: #0e0e17;
+  --md-secondary-20: #15151f;
+  --md-secondary-22: #191924;
+  --md-secondary-24: #1e1e2a;
+  --md-secondary-30: #2c2c3b;
+  --md-secondary-40: #45455b;
+  --md-secondary-50: #60607c;
+  --md-secondary-60: #7d7d97;
+  --md-secondary-70: #9c9cb2;
+  --md-secondary-80: #bcbccd;
+  --md-secondary-87: #d3d3e0;
+  --md-secondary-90: #dcdde8;
+  --md-secondary-92: #e3e3ee;
+  --md-secondary-94: #eaeaf3;
+  --md-secondary-95: #edeef6;
+  --md-secondary-96: #f1f1f9;
+  --md-secondary-98: #f7f8ff;
+  --md-secondary-99: #fbfbff;
+  --md-secondary-100: #ffffff;
+
+  /* tertiary */
+  --md-tertiary-0: #000000;
+  --md-tertiary-4: #010000;
+  --md-tertiary-6: #020001;
+  --md-tertiary-10: #070205;
+  --md-tertiary-12: #0b0308;
+  --md-tertiary-17: #180a14;
+  --md-tertiary-20: #200f1b;
+  --md-tertiary-22: #261320;
+  --md-tertiary-24: #2c1725;
+  --md-tertiary-30: #3e2435;
+  --md-tertiary-40: #5e3a52;
+  --md-tertiary-50: #805271;
+  --md-tertiary-60: #9c718d;
+  --md-tertiary-70: #b692a9;
+  --md-tertiary-80: #d0b4c6;
+  --md-tertiary-87: #e3cddb;
+  --md-tertiary-90: #ebd7e4;
+  --md-tertiary-92: #f0dfea;
+  --md-tertiary-94: #f6e6f0;
+  --md-tertiary-95: #f8eaf3;
+  --md-tertiary-96: #fbedf6;
+  --md-tertiary-98: #fff4fc;
+  --md-tertiary-99: #fff8ff;
+  --md-tertiary-100: #ffffff;
+
+  /* error */
+  --md-error-0: #000000;
+  --md-error-4: #020000;
+  --md-error-6: #040000;
+  --md-error-10: #0e0000;
+  --md-error-12: #150000;
+  --md-error-17: #260101;
+  --md-error-20: #310202;
+  --md-error-22: #380304;
+  --md-error-24: #400505;
+  --md-error-30: #570e0d;
+  --md-error-40: #811e1b;
+  --md-error-50: #ad2f2a;
+  --md-error-60: #c9574e;
+  --md-error-70: #de8076;
+  --md-error-80: #f1a89f;
+  --md-error-87: #fec4bd;
+  --md-error-90: #ffd0c9;
+  --md-error-92: #ffd8d2;
+  --md-error-94: #ffe0da;
+  --md-error-95: #ffe4df;
+  --md-error-96: #ffe8e3;
+  --md-error-98: #fff0ec;
+  --md-error-99: #fff4f0;
+  --md-error-100: #ffffff;
+
+  /* neutral */
+  --md-neutral-0: #000000;
+  --md-neutral-4: #000000;
+  --md-neutral-6: #010101;
+  --md-neutral-10: #030304;
+  --md-neutral-12: #060606;
+  --md-neutral-17: #0f0f10;
+  --md-neutral-20: #161617;
+  --md-neutral-22: #1a1a1c;
+  --md-neutral-24: #1f1f21;
+  --md-neutral-30: #2d2e30;
+  --md-neutral-40: #47474a;
+  --md-neutral-50: #636366;
+  --md-neutral-60: #808083;
+  --md-neutral-70: #9e9ea1;
+  --md-neutral-80: #bdbdc0;
+  --md-neutral-87: #d4d4d6;
+  --md-neutral-90: #dededf;
+  --md-neutral-92: #e4e4e6;
+  --md-neutral-94: #ebebec;
+  --md-neutral-95: #eeeeef;
+  --md-neutral-96: #f1f2f3;
+  --md-neutral-98: #f8f8f9;
+  --md-neutral-99: #fcfcfc;
+  --md-neutral-100: #ffffff;
+
+  /* neutral-variant */
+  --md-neutral-variant-0: #000000;
+  --md-neutral-variant-4: #000000;
+  --md-neutral-variant-6: #010101;
+  --md-neutral-variant-10: #030305;
+  --md-neutral-variant-12: #050508;
+  --md-neutral-variant-17: #0f0f13;
+  --md-neutral-variant-20: #15151a;
+  --md-neutral-variant-22: #1a1a1f;
+  --md-neutral-variant-24: #1f1f25;
+  --md-neutral-variant-30: #2d2d35;
+  --md-neutral-variant-40: #464751;
+  --md-neutral-variant-50: #62626f;
+  --md-neutral-variant-60: #7f7f8b;
+  --md-neutral-variant-70: #9d9da8;
+  --md-neutral-variant-80: #bdbdc5;
+  --md-neutral-variant-87: #d3d3da;
+  --md-neutral-variant-90: #dddde3;
+  --md-neutral-variant-92: #e4e4e9;
+  --md-neutral-variant-94: #eaebef;
+  --md-neutral-variant-95: #eeeef2;
+  --md-neutral-variant-96: #f1f1f5;
+  --md-neutral-variant-98: #f8f8fb;
+  --md-neutral-variant-99: #fbfbff;
+  --md-neutral-variant-100: #ffffff;
+
+  /* locked */
+  --md-locked-0: #000000;
+  --md-locked-4: #000000;
+  --md-locked-6: #000100;
+  --md-locked-10: #000501;
+  --md-locked-12: #000902;
+  --md-locked-17: #011406;
+  --md-locked-20: #031c0b;
+  --md-locked-22: #04210e;
+  --md-locked-24: #062612;
+  --md-locked-30: #0e371d;
+  --md-locked-40: #1e5430;
+  --md-locked-50: #2e7345;
+  --md-locked-60: #549065;
+  --md-locked-70: #7cac88;
+  --md-locked-80: #a5c8ad;
+  --md-locked-87: #c1ddc7;
+  --md-locked-90: #cde5d2;
+  --md-locked-92: #d5ebda;
+  --md-locked-94: #def1e2;
+  --md-locked-95: #e2f4e6;
+  --md-locked-96: #e6f7ea;
+  --md-locked-98: #eefdf1;
+  --md-locked-99: #f2fff5;
+  --md-locked-100: #ffffff;
+}

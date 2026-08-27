@@ -1,0 +1,20 @@
+/* Rejilla de 4dp. Margen lateral de pantalla: 16dp. */
+:root {
+  --md-space-0: 0px;
+  --md-space-1: 4px;
+  --md-space-2: 8px;
+  --md-space-3: 12px;
+  --md-space-4: 16px;
+  --md-space-5: 20px;
+  --md-space-6: 24px;
+  --md-space-7: 28px;
+  --md-space-8: 32px;
+  --md-space-10: 40px;
+  --md-space-12: 48px;
+  --md-space-16: 64px;
+
+  --vl-screen-margin: var(--md-space-4);
+  --vl-touch-target: 48px;
+  --vl-app-bar-height: 64px;
+  --vl-nav-bar-height: 80px;
+}

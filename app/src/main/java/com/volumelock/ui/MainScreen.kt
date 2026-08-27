@@ -3,129 +3,99 @@ package com.volumelock.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Lock
+import androidx.compose.material.icons.rounded.LockOpen
+import androidx.compose.material.icons.rounded.Tune
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.material3.Slider
 import com.volumelock.data.VolumeStream
-
-private val STREAM_LABELS = mapOf(
-    VolumeStream.MUSIC to "Multimedia",
-    VolumeStream.RING to "Llamada / Tono",
-    VolumeStream.NOTIFICATION to "Notificaciones",
-    VolumeStream.ALARM to "Alarma",
-)
+import com.volumelock.ui.components.LockHero
+import com.volumelock.ui.components.StatusBadge
+import com.volumelock.ui.components.VolumeSliderRow
+import com.volumelock.ui.theme.LocalVlColors
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
-fun MainScreen(
-    modifier: Modifier = Modifier,
-    viewModel: VolumeViewModel = viewModel(),
-) {
+fun MainScreen(viewModel: VolumeViewModel, modifier: Modifier = Modifier) {
     val locked by viewModel.lockState.collectAsStateWithLifecycle()
+    val since by viewModel.lockSince.collectAsStateWithLifecycle()
     val targets by viewModel.targets.collectAsStateWithLifecycle()
+    val vl = LocalVlColors.current
 
     Column(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(20.dp),
+            .padding(horizontal = 16.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        LockCard(locked = locked, onToggle = viewModel::toggleLock)
-
-        Text(
-            text = "Volumen objetivo por canal",
-            style = MaterialTheme.typography.titleMedium,
+        LockHero(
+            locked = locked,
+            since = since?.let { SimpleDateFormat("HH:mm", Locale("es", "ES")).format(Date(it)) },
+            onToggle = viewModel::toggleLock,
         )
 
-        // Posición local de cada slider mientras se arrastra (se persiste al soltar).
-        val dragging = remember { mutableStateMapOf<VolumeStream, Float>() }
-
-        VolumeStream.entries.forEach { stream ->
-            val max = viewModel.maxVolume(stream)
-            val saved = targets[stream] ?: viewModel.currentVolume(stream)
-            val value = dragging[stream] ?: saved.toFloat()
-            StreamSlider(
-                label = STREAM_LABELS[stream] ?: stream.name,
-                value = value,
-                max = max,
-                onValueChange = { dragging[stream] = it },
-                onValueChangeFinished = {
-                    viewModel.setTargetVolume(stream, value.toInt())
-                    dragging.remove(stream)
-                },
-            )
-        }
-    }
-}
-
-@Composable
-private fun LockCard(locked: Boolean, onToggle: () -> Unit) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Column {
-                Text(
-                    text = if (locked) "🔒 Candado activo" else "🔓 Candado inactivo",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                )
-                Text(
-                    text = if (locked) "El volumen está protegido" else "Toca para proteger el volumen",
-                    style = MaterialTheme.typography.bodyMedium,
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            if (locked) {
+                StatusBadge(vl.lockedContainer, vl.onLockedContainer, Icons.Rounded.Lock, "${targets.size} canales fijos")
+            } else {
+                StatusBadge(
+                    MaterialTheme.colorScheme.surfaceContainerHighest,
+                    MaterialTheme.colorScheme.onSurfaceVariant,
+                    Icons.Rounded.LockOpen,
+                    "Sin vigilancia",
                 )
             }
-            Switch(checked = locked, onCheckedChange = { onToggle() })
         }
-    }
-}
 
-@Composable
-private fun StreamSlider(
-    label: String,
-    value: Float,
-    max: Int,
-    onValueChange: (Float) -> Unit,
-    onValueChangeFinished: () -> Unit,
-) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Text(text = label, style = MaterialTheme.typography.bodyLarge)
-            Text(text = "${value.toInt()} / $max", style = MaterialTheme.typography.bodyMedium)
+        Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)) {
+            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text("Volumen objetivo", style = MaterialTheme.typography.titleMedium)
+
+                val dragging = remember { mutableStateMapOf<VolumeStream, Float>() }
+                VolumeStream.entries.forEach { stream ->
+                    val ui = STREAM_UI.getValue(stream)
+                    val max = viewModel.maxVolume(stream)
+                    val saved = targets[stream] ?: viewModel.currentVolume(stream)
+                    val value = dragging[stream] ?: saved.toFloat()
+                    VolumeSliderRow(
+                        icon = ui.icon,
+                        label = ui.label,
+                        value = value,
+                        max = max,
+                        onValueChange = { dragging[stream] = it },
+                        onValueChangeFinished = {
+                            viewModel.setTargetVolume(stream, value.toInt())
+                            dragging.remove(stream)
+                        },
+                    )
+                }
+            }
         }
-        Slider(
-            value = value,
-            onValueChange = onValueChange,
-            onValueChangeFinished = onValueChangeFinished,
-            valueRange = 0f..max.toFloat(),
-            steps = (max - 1).coerceAtLeast(0),
-        )
-        Spacer(Modifier.height(4.dp))
+
+        OutlinedButton(onClick = viewModel::fixToCurrent, modifier = Modifier.fillMaxWidth()) {
+            Icon(Icons.Rounded.Tune, contentDescription = null, modifier = Modifier.padding(end = 8.dp))
+            Text("Fijar con el volumen actual", textAlign = TextAlign.Center)
+        }
     }
 }

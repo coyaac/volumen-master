@@ -1,0 +1,26 @@
+<!-- @dsCard group="Components" viewport="700x230" name="Controles" subtitle="Interruptor maestro y sliders de volumen por stream" -->
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.20.6/babel.min.js"></script>
+<script type="text/babel" src="../../_bundle.jsx"></script>
+<style>body{padding:16px;height:198px;display:flex;align-items:center}#r{width:100%}</style>
+</head><body><div id="r"></div>
+<script type="text/babel">
+const NS = window.VL;
+const { Switch, VolumeSlider } = NS;
+function Demo(){ const [on,setOn]=React.useState(true); const [m,setM]=React.useState(12); return (
+  <div style={{display:'grid',gap:'8px'}}>
+    <div style={{display:'flex',gap:'16px',alignItems:'center'}}>
+      <Switch size="large" checked={on} onChange={setOn} onColor="var(--vl-locked)" />
+      <Switch checked={on} onChange={setOn} />
+      <Switch checked={false} />
+      <Switch checked disabled />
+    </div>
+    <VolumeSlider icon="volume_up" label="Música" value={m} max={15} onChange={setM} />
+    <VolumeSlider icon="alarm" label="Alarma" value={6} max={7} />
+  </div>); }
+ReactDOM.createRoot(document.getElementById('r')).render(<Demo />);
+</script></body></html>

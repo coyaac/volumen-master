@@ -1,0 +1,20 @@
+<!-- @dsCard group="Components" viewport="700x200" name="Navegación" subtitle="Barra superior y barra de navegación inferior" -->
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.20.6/babel.min.js"></script>
+<script type="text/babel" src="../../_bundle.jsx"></script>
+<style>body{padding:16px;height:168px;display:flex;align-items:center}#r{width:100%}</style>
+</head><body><div id="r"></div>
+<script type="text/babel">
+const NS = window.VL;
+const { TopAppBar, NavigationBar, IconButton } = NS;
+function Demo(){ const [t,setT]=React.useState('lock'); return (
+  <div style={{border:'1px solid var(--md-outline-variant)',borderRadius:'12px',overflow:'hidden'}}>
+    <TopAppBar title="Historial" actions={<><IconButton icon="filter_list" label="Filtrar" /><IconButton icon="more_vert" label="Más" /></>} />
+    <NavigationBar value={t} onChange={setT} items={[{value:'lock',label:'Candado',icon:'lock'},{value:'log',label:'Historial',icon:'history'},{value:'set',label:'Ajustes',icon:'settings'}]} />
+  </div>); }
+ReactDOM.createRoot(document.getElementById('r')).render(<Demo />);
+</script></body></html>

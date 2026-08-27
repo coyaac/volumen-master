@@ -1,0 +1,106 @@
+/* Esquema Material 3 — roles semánticos. Claro por defecto, oscuro en [data-theme="dark"]. */
+:root {
+  --md-primary: var(--md-primary-40);
+  --md-on-primary: var(--md-primary-100);
+  --md-primary-container: var(--md-primary-90);
+  --md-on-primary-container: var(--md-primary-10);
+
+  --md-secondary: var(--md-secondary-40);
+  --md-on-secondary: var(--md-secondary-100);
+  --md-secondary-container: var(--md-secondary-90);
+  --md-on-secondary-container: var(--md-secondary-10);
+
+  --md-tertiary: var(--md-tertiary-40);
+  --md-on-tertiary: var(--md-tertiary-100);
+  --md-tertiary-container: var(--md-tertiary-90);
+  --md-on-tertiary-container: var(--md-tertiary-10);
+
+  --md-error: var(--md-error-40);
+  --md-on-error: var(--md-error-100);
+  --md-error-container: var(--md-error-90);
+  --md-on-error-container: var(--md-error-10);
+
+  /* Adición intencional: rol semántico "candado activo". Ver readme.md */
+  --vl-locked: var(--md-locked-40);
+  --vl-on-locked: var(--md-locked-100);
+  --vl-locked-container: var(--md-locked-90);
+  --vl-on-locked-container: var(--md-locked-10);
+
+  --md-surface: var(--md-neutral-98);
+  --md-on-surface: var(--md-neutral-10);
+  --md-surface-variant: var(--md-neutral-variant-90);
+  --md-on-surface-variant: var(--md-neutral-variant-30);
+
+  --md-surface-dim: var(--md-neutral-87);
+  --md-surface-bright: var(--md-neutral-98);
+  --md-surface-container-lowest: var(--md-neutral-100);
+  --md-surface-container-low: var(--md-neutral-96);
+  --md-surface-container: var(--md-neutral-94);
+  --md-surface-container-high: var(--md-neutral-92);
+  --md-surface-container-highest: var(--md-neutral-90);
+
+  --md-outline: var(--md-neutral-variant-50);
+  --md-outline-variant: var(--md-neutral-variant-80);
+
+  --md-inverse-surface: var(--md-neutral-20);
+  --md-inverse-on-surface: var(--md-neutral-95);
+  --md-inverse-primary: var(--md-primary-80);
+
+  --md-scrim: #000000;
+  --md-shadow: #000000;
+
+  /* Capas de estado Material 3 */
+  --md-state-hover: 0.08;
+  --md-state-focus: 0.10;
+  --md-state-pressed: 0.10;
+  --md-state-dragged: 0.16;
+  --md-state-disabled-content: 0.38;
+  --md-state-disabled-container: 0.12;
+}
+
+[data-theme="dark"] {
+  --md-primary: var(--md-primary-80);
+  --md-on-primary: var(--md-primary-20);
+  --md-primary-container: var(--md-primary-30);
+  --md-on-primary-container: var(--md-primary-90);
+
+  --md-secondary: var(--md-secondary-80);
+  --md-on-secondary: var(--md-secondary-20);
+  --md-secondary-container: var(--md-secondary-30);
+  --md-on-secondary-container: var(--md-secondary-90);
+
+  --md-tertiary: var(--md-tertiary-80);
+  --md-on-tertiary: var(--md-tertiary-20);
+  --md-tertiary-container: var(--md-tertiary-30);
+  --md-on-tertiary-container: var(--md-tertiary-90);
+
+  --md-error: var(--md-error-80);
+  --md-on-error: var(--md-error-20);
+  --md-error-container: var(--md-error-30);
+  --md-on-error-container: var(--md-error-90);
+
+  --vl-locked: var(--md-locked-80);
+  --vl-on-locked: var(--md-locked-20);
+  --vl-locked-container: var(--md-locked-30);
+  --vl-on-locked-container: var(--md-locked-90);
+
+  --md-surface: var(--md-neutral-6);
+  --md-on-surface: var(--md-neutral-90);
+  --md-surface-variant: var(--md-neutral-variant-30);
+  --md-on-surface-variant: var(--md-neutral-variant-80);
+
+  --md-surface-dim: var(--md-neutral-6);
+  --md-surface-bright: var(--md-neutral-24);
+  --md-surface-container-lowest: var(--md-neutral-4);
+  --md-surface-container-low: var(--md-neutral-10);
+  --md-surface-container: var(--md-neutral-12);
+  --md-surface-container-high: var(--md-neutral-17);
+  --md-surface-container-highest: var(--md-neutral-22);
+
+  --md-outline: var(--md-neutral-variant-60);
+  --md-outline-variant: var(--md-neutral-variant-30);
+
+  --md-inverse-surface: var(--md-neutral-90);
+  --md-inverse-on-surface: var(--md-neutral-20);
+  --md-inverse-primary: var(--md-primary-40);
+}

@@ -1,0 +1,27 @@
+<!-- @dsCard group="Components" viewport="700x300" name="VolumeLock" subtitle="Bloque de estado, filas de historial y tile de Ajustes rápidos" -->
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.20.6/babel.min.js"></script>
+<script type="text/babel" src="../../_bundle.jsx"></script>
+<style>body{padding:16px;height:268px;display:flex;align-items:center}#r{width:100%}</style>
+</head><body><div id="r"></div>
+<script type="text/babel">
+const NS = window.VL;
+const { LockHero, LogEntry, QsTile } = NS;
+function Demo(){ const [on,setOn]=React.useState(true); return (
+  <div style={{display:'grid',gap:'12px'}}>
+    <LockHero locked={on} since="08:14" onToggle={setOn} />
+    <div style={{display:'grid',gridTemplateColumns:'1fr auto',gap:'12px',alignItems:'start'}}>
+      <div style={{background:'var(--md-surface-container-low)',borderRadius:'12px',padding:'4px 0'}}>
+        <LogEntry time="14:02" stream="musica" streamLabel="Música" from={12} to={7} reverted />
+        <LogEntry time="13:41" stream="alarma" streamLabel="Alarma" from={6} to={6} />
+        <LogEntry time="09:20" stream="notificacion" streamLabel="Notificación" from={5} to={0} reverted />
+      </div>
+      <div style={{display:'grid',gap:'8px'}}><QsTile active /><QsTile /></div>
+    </div>
+  </div>); }
+ReactDOM.createRoot(document.getElementById('r')).render(<Demo />);
+</script></body></html>

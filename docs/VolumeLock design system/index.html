@@ -1,0 +1,371 @@
+<!-- @dsCard group="Templates" viewport="1400x1000" name="VolumeLock Design System" subtitle="Paletas, tipografía, componentes y las cuatro pantallas" -->
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>VolumeLock — Design System</title>
+<link rel="stylesheet" href="styles.css">
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.20.6/babel.min.js"></script>
+<script type="text/babel" src="_bundle.jsx"></script>
+<style>
+  body { background: var(--md-surface); }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 64px 32px 96px; }
+  section { margin-bottom: 72px; }
+  .eyebrow { font: var(--md-label-medium); letter-spacing: 1.5px; text-transform: uppercase; color: var(--md-on-surface-variant); margin-bottom: 8px; }
+  h2 { font: var(--md-headline-medium); margin: 0 0 8px; }
+  .lede { font: var(--md-body-large); color: var(--md-on-surface-variant); max-width: 62ch; margin: 0 0 28px; text-wrap: pretty; }
+  .rule { height: 1px; background: var(--md-outline-variant); margin: 0 0 28px; }
+  .note { font: var(--md-body-medium); color: var(--md-on-surface-variant); max-width: 62ch; text-wrap: pretty; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  code { font-family: var(--md-font-mono); font-size: 12px; }
+  .phones { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; justify-items: center; }
+  .phone { width: 360px; height: 844px; background: var(--md-surface); border: 1px solid var(--md-outline-variant); border-radius: 28px; overflow: hidden; display: flex; flex-direction: column; }
+  .pbody { min-width: 0; }
+  .pbody > * { min-width: 0; }
+  .pbody { flex: 1; overflow: hidden; padding: 0 var(--vl-screen-margin) var(--md-space-4); }
+  .cap { font: var(--md-label-large); color: var(--md-on-surface-variant); margin-bottom: 10px; text-align: center; }
+  .statusbar { height: 28px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; font: var(--md-label-medium); color: var(--md-on-surface-variant); }
+</style></head>
+<body><div id="r"></div>
+<script type="text/babel">
+const { Button, IconButton, SegmentedButton, Switch, VolumeSlider, Card, ListItem, Dialog, StatusBadge, Banner, TopAppBar, NavigationBar, LockHero, LogEntry, QsTile } = window.VL;
+
+const RAMP_TONES = [10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 99];
+const RAMPS = [
+  ['primary', 'Primario', 'Acciones, sliders, selección'],
+  ['secondary', 'Secundario', 'Contenedores de énfasis suave'],
+  ['tertiary', 'Terciario', 'Acentos puntuales'],
+  ['locked', 'Candado', 'Único uso: estado bloqueado'],
+  ['error', 'Error', 'Permisos pendientes, destructivo'],
+  ['neutral', 'Neutro', 'Superficies y texto'],
+  ['neutral-variant', 'Neutro variante', 'Bordes y texto secundario']
+];
+
+function Ramp({ name, label, use }) {
+  return (
+    <div style={{ marginBottom: 14 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6 }}>
+        <span style={{ font: 'var(--md-label-large)' }}>{label}</span>
+        <span style={{ font: 'var(--md-body-small)', color: 'var(--md-on-surface-variant)' }}>{use}</span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(11, 1fr)', gap: 2 }}>
+        {RAMP_TONES.map(t => (
+          <div key={t} style={{ height: 52, borderRadius: 4, background: 'var(--md-' + name + '-' + t + ')', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', paddingBottom: 4, font: 'var(--md-label-small)', color: t <= 50 ? '#fff' : '#000' }}>{t}</div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Role({ bg, fg, label, token }) {
+  return (
+    <div style={{ background: 'var(' + bg + ')', color: 'var(' + fg + ')', borderRadius: 12, padding: 16, minHeight: 84, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+      <span style={{ font: 'var(--md-title-medium)', letterSpacing: 'var(--md-tracking-title-medium)' }}>{label}</span>
+      <code style={{ opacity: 0.8 }}>{token}</code>
+    </div>
+  );
+}
+
+const TYPE = [
+  ['--md-display-small', 'Display small', 'Roboto Flex 400 · 36/44'],
+  ['--md-headline-medium', 'Headline medium', 'Roboto Flex 400 · 28/36'],
+  ['--md-headline-small', 'Headline small', 'Roboto Flex 400 · 24/32'],
+  ['--md-title-large', 'Title large', 'Roboto Flex 400 · 22/28'],
+  ['--md-title-medium', 'Title medium', 'Roboto Flex 500 · 16/24'],
+  ['--md-body-large', 'Body large', 'Roboto Flex 400 · 16/24'],
+  ['--md-body-medium', 'Body medium', 'Roboto Flex 400 · 14/20'],
+  ['--md-label-large', 'Label large', 'Roboto Flex 500 · 14/20'],
+  ['--md-label-medium', 'Label medium', 'Roboto Flex 500 · 12/16']
+];
+
+const ICONS = ['lock','lock_open','volume_up','ring_volume','notifications','alarm','history','accessibility_new','battery_saver','undo','check_circle','error','settings','filter_list'];
+
+function Section({ eyebrow, title, lede, children }) {
+  return (
+    <section>
+      <div className="eyebrow">{eyebrow}</div>
+      <h2>{title}</h2>
+      <p className="lede">{lede}</p>
+      <div className="rule"></div>
+      {children}
+    </section>
+  );
+}
+
+function Phone({ label, children }) {
+  return (
+    <div>
+      <div className="cap">{label}</div>
+      <div className="phone">
+        <div className="statusbar"><span>9:41</span><span style={{ display: 'flex', gap: 4 }}><span className="md-icon" style={{ fontSize: 14 }}>signal_cellular_alt</span><span className="md-icon" style={{ fontSize: 14 }}>battery_full</span></span></div>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+const NAV = [{ value: 'lock', label: 'Candado', icon: 'lock' }, { value: 'log', label: 'Historial', icon: 'history' }, { value: 'set', label: 'Ajustes', icon: 'settings' }];
+
+function Principal() {
+  const [on, setOn] = React.useState(true);
+  const [m, setM] = React.useState(12), [ll, setLl] = React.useState(4), [n, setN] = React.useState(5), [a, setA] = React.useState(6);
+  return <Phone label="Principal">
+    <TopAppBar title="VolumeLock" actions={<IconButton icon="settings" label="Ajustes" />} />
+    <div className="pbody" style={{ display: 'grid', gap: 'var(--md-space-4)', alignContent: 'start' }}>
+      <LockHero locked={on} since="08:14" onToggle={setOn} />
+      <div style={{ display: 'flex', gap: 'var(--md-space-2)' }}>
+        <StatusBadge tone="info">3 cambios hoy</StatusBadge>
+        <StatusBadge tone={on ? 'locked' : 'unlocked'}>{on ? '4 streams fijos' : 'Sin vigilancia'}</StatusBadge>
+      </div>
+      <Card variant="filled">
+        <div style={{ font: 'var(--md-title-medium)', letterSpacing: 'var(--md-tracking-title-medium)', marginBottom: 'var(--md-space-3)' }}>Volumen objetivo</div>
+        <div style={{ display: 'grid', gap: 'var(--md-space-2)' }}>
+          <VolumeSlider icon="volume_up" label="Música" value={m} max={15} onChange={setM} />
+          <VolumeSlider icon="ring_volume" label="Llamada" value={ll} max={5} onChange={setLl} />
+          <VolumeSlider icon="notifications" label="Notificación" value={n} max={7} onChange={setN} />
+          <VolumeSlider icon="alarm" label="Alarma" value={a} max={7} onChange={setA} />
+        </div>
+      </Card>
+      <Button variant="outlined" icon="tune" fullWidth>Fijar con el volumen actual</Button>
+    </div>
+    <NavigationBar value="lock" items={NAV} />
+  </Phone>;
+}
+
+const LOG = [
+  ['14:02','musica','Música',12,7,true],['13:41','alarma','Alarma',6,7,false],
+  ['11:08','musica','Música',12,15,true],['10:55','notificacion','Notificación',5,0,true],
+  ['09:20','llamada','Llamada',4,2,true],['08:14','musica','Música',9,12,false]
+];
+
+function Historial() {
+  const [r, setR] = React.useState('hoy');
+  return <Phone label="Historial">
+    <TopAppBar title="Historial" leading={<IconButton icon="arrow_back" label="Volver" />} actions={<IconButton icon="delete" label="Borrar historial" />} />
+    <div className="pbody" style={{ display: 'grid', gap: 'var(--md-space-4)', alignContent: 'start' }}>
+      <SegmentedButton value={r} onChange={setR} options={[{ value: 'hoy', label: 'Hoy' }, { value: '7d', label: '7 días' }, { value: 'todo', label: 'Todo' }]} />
+      <div style={{ font: 'var(--md-label-large)', color: 'var(--md-on-surface-variant)' }}>Miércoles, 27 de agosto · 6 cambios</div>
+      <Card variant="filled" padding="var(--md-space-2) 0">
+        {LOG.map((e, i) => <LogEntry key={i} time={e[0]} stream={e[1]} streamLabel={e[2]} from={e[3]} to={e[4]} reverted={e[5]} />)}
+      </Card>
+      <div style={{ font: 'var(--md-body-small)', color: 'var(--md-on-surface-variant)', textAlign: 'center' }}>5 revertidos · 1 permitido</div>
+    </div>
+    <NavigationBar value="log" items={NAV} />
+  </Phone>;
+}
+
+function Onboarding() {
+  return <Phone label="Onboarding y permisos">
+    <TopAppBar title="Permisos" />
+    <div className="pbody" style={{ display: 'grid', gap: 'var(--md-space-4)', alignContent: 'start' }}>
+      <div style={{ font: 'var(--md-headline-small)' }}>Dos permisos y listo</div>
+      <div style={{ font: 'var(--md-body-medium)', color: 'var(--md-on-surface-variant)' }}>VolumeLock necesita observar el volumen del sistema y seguir despierto en segundo plano. Los avisos desaparecen cuando los resuelves.</div>
+      <Banner icon="accessibility_new" title="Falta el permiso de Accesibilidad" action="Abrir ajustes">Sin este permiso, VolumeLock no puede detectar los cambios de volumen.</Banner>
+      <Banner resolved title="Optimización de batería desactivada">VolumeLock seguirá vigilando con la pantalla apagada.</Banner>
+      <Card variant="outlined" padding="var(--md-space-2) 0">
+        <ListItem icon="lock" headline="Activar el candado al iniciar" supporting="Se bloquea solo al encender el móvil" trailing={<Switch checked />} />
+        <ListItem icon="dashboard_customize" headline="Añadir a Ajustes rápidos" supporting="Toggle desde el panel desplegable" trailing={<Switch checked />} />
+      </Card>
+      <Button variant="filled" fullWidth disabled>Continuar</Button>
+    </div>
+  </Phone>;
+}
+
+function QuickSettings() {
+  const tile = (icon, label) => (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%', maxWidth: 176, minWidth: 0, height: 80, padding: 16, borderRadius: 'var(--md-shape-xl)', background: 'var(--md-surface-container-highest)', color: 'var(--md-on-surface-variant)' }}>
+      <span className="md-icon filled" style={{ fontSize: 24 }}>{icon}</span>
+      <div style={{ font: 'var(--md-label-large)' }}>{label}</div>
+    </div>
+  );
+  return <Phone label="Quick Settings Tile">
+    <div style={{ flex: 1, background: 'var(--md-surface-container-low)', padding: 'var(--md-space-4)', display: 'grid', gap: 'var(--md-space-4)', alignContent: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--md-space-2)' }}>
+        <QsTile active />{tile('wifi', 'Wi-Fi')}{tile('bluetooth', 'Bluetooth')}<QsTile />
+      </div>
+      <div style={{ font: 'var(--md-label-large)', color: 'var(--md-on-surface-variant)', marginTop: 'var(--md-space-2)' }}>Estados del tile</div>
+      <div style={{ display: 'grid', gap: 'var(--md-space-2)' }}>
+        <QsTile active state="Bloqueado · 4 streams" />
+        <QsTile state="Sin permiso" />
+      </div>
+      <div style={{ font: 'var(--md-body-small)', color: 'var(--md-on-surface-variant)' }}>El tile refleja el mismo verde del bloque de estado. Un toque alterna el candado sin abrir la app.</div>
+    </div>
+  </Phone>;
+}
+
+function App() {
+  const [dark, setDark] = React.useState(false);
+  const [seg, setSeg] = React.useState('7d');
+  const [sw, setSw] = React.useState(true);
+  const [vol, setVol] = React.useState(12);
+  const [dlg, setDlg] = React.useState(false);
+
+  React.useEffect(() => {
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  }, [dark]);
+
+  return (
+    <div className="wrap">
+      <header style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, marginBottom: 56 }}>
+        <div>
+          <div className="eyebrow">Design system</div>
+          <div style={{ font: 'var(--md-display-small)' }}>VolumeLock</div>
+          <p className="lede" style={{ marginTop: 8, marginBottom: 0 }}>Material 3 en español para una app Android de uso personal que fija el volumen y revierte los cambios que no autorizaste. Utilitaria: el estado del candado se lee a un metro de distancia.</p>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: '0 0 auto', paddingBottom: 4 }}>
+          <span className="md-icon" style={{ fontSize: 20, color: 'var(--md-on-surface-variant)' }}>{dark ? 'dark_mode' : 'light_mode'}</span>
+          <Switch checked={dark} onChange={setDark} />
+        </div>
+      </header>
+
+      <Section eyebrow="01" title="Color" lede="Semilla índigo #4A4FA6. Las rampas se generaron en OKLCH sobre una escala perceptual compartida, así que el mismo paso de cualquier rampa pesa lo mismo. El verde del candado es una adición deliberada: Material 3 no define un rol de éxito y esta app necesita que “bloqueado” no se confunda con una acción.">
+        {RAMPS.map(r => <Ramp key={r[0]} name={r[0]} label={r[1]} use={r[2]} />)}
+        <div className="grid4" style={{ marginTop: 28 }}>
+          <Role bg="--md-primary" fg="--md-on-primary" label="Primario" token="--md-primary" />
+          <Role bg="--md-primary-container" fg="--md-on-primary-container" label="Contenedor" token="--md-primary-container" />
+          <Role bg="--vl-locked" fg="--vl-on-locked" label="Candado" token="--vl-locked" />
+          <Role bg="--vl-locked-container" fg="--vl-on-locked-container" label="Contenedor" token="--vl-locked-container" />
+          <Role bg="--md-error" fg="--md-on-error" label="Error" token="--md-error" />
+          <Role bg="--md-error-container" fg="--md-on-error-container" label="Contenedor" token="--md-error-container" />
+          <Role bg="--md-surface-container-high" fg="--md-on-surface" label="Superficie alta" token="--md-surface-container-high" />
+          <Role bg="--md-surface-variant" fg="--md-on-surface-variant" label="Superficie variante" token="--md-surface-variant" />
+        </div>
+        <p className="note" style={{ marginTop: 16 }}>El índigo es para acciones, el verde para el estado bloqueado. Nunca al revés. Los dos esquemas, claro y oscuro, salen de las mismas rampas: el interruptor de arriba cambia toda la página.</p>
+      </Section>
+
+      <Section eyebrow="02" title="Tipografía" lede="Roboto Flex para toda la interfaz, con la escala Material 3 completa. Roboto Mono sólo donde las cifras tienen que alinearse en columna: lecturas de volumen y horas del historial.">
+        <div className="grid2">
+          <div>
+            {TYPE.map(([v, l, s]) => (
+              <div key={v} style={{ padding: '10px 0', borderBottom: '1px solid var(--md-outline-variant)' }}>
+                <div style={{ font: 'var(' + v + ')' }}>Volumen bloqueado</div>
+                <div style={{ font: 'var(--md-label-small)', color: 'var(--md-on-surface-variant)', marginTop: 4 }}>{l} · {s}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ display: 'grid', gap: 16, alignContent: 'start' }}>
+            <Card variant="outlined" padding="20px">
+              <div style={{ font: 'var(--md-label-medium)', color: 'var(--md-on-surface-variant)', marginBottom: 8 }}>Lectura de volumen · Roboto Mono 500 · 44</div>
+              <div style={{ font: 'var(--vl-readout)', fontVariantNumeric: 'tabular-nums' }}>12 / 15</div>
+            </Card>
+            <Card variant="outlined" padding="20px">
+              <div style={{ font: 'var(--md-label-medium)', color: 'var(--md-on-surface-variant)', marginBottom: 10 }}>Voz</div>
+              <p className="note" style={{ margin: 0 }}>Se trata al usuario de tú. La app habla de sí misma en tercera persona. Estados literales, nunca eufemismos: “Bloqueado”, no “Protegido”. Los permisos se explican por su consecuencia. Sin emoji y sin signos de exclamación: el tono es el de un panel de instrumentos.</p>
+            </Card>
+            <Card variant="outlined" padding="20px">
+              <div style={{ font: 'var(--md-label-medium)', color: 'var(--md-on-surface-variant)', marginBottom: 10 }}>Iconografía · Material Symbols Rounded</div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 12 }}>
+                {ICONS.map(i => <span key={i} className="md-icon" style={{ fontSize: 24, textAlign: 'center', color: 'var(--md-on-surface)' }}>{i}</span>)}
+              </div>
+            </Card>
+          </div>
+        </div>
+      </Section>
+
+      <Section eyebrow="03" title="Forma, espacio y movimiento" lede="Rejilla de 4dp, margen lateral de 16dp y objetivo táctil de 48dp sin excepciones. Una sola curva de movimiento; la única animación con presencia es el cruce de color del bloque de estado.">
+        <div className="grid2">
+          <div>
+            <div style={{ font: 'var(--md-label-large)', marginBottom: 12 }}>Espaciado</div>
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, marginBottom: 28 }}>
+              {[1,2,3,4,5,6,8,10,12,16].map(n => (
+                <div key={n} style={{ textAlign: 'center' }}>
+                  <div style={{ width: 'var(--md-space-' + n + ')', height: 'var(--md-space-' + n + ')', background: 'var(--md-primary)', borderRadius: 2 }}></div>
+                  <div style={{ font: 'var(--md-label-small)', color: 'var(--md-on-surface-variant)', marginTop: 4 }}>{n * 4}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ font: 'var(--md-label-large)', marginBottom: 12 }}>Forma</div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              {[['xs','4'],['sm','8'],['md','12'],['lg','16'],['xl','28'],['full','pastilla']].map(([k, l]) => (
+                <div key={k} style={{ flex: 1, height: 76, border: '1px solid var(--md-outline-variant)', background: 'var(--md-surface-container)', borderRadius: 'var(--md-shape-' + k + ')', display: 'flex', alignItems: 'center', justifyContent: 'center', font: 'var(--md-label-medium)', color: 'var(--md-on-surface-variant)' }}>{l}</div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div style={{ font: 'var(--md-label-large)', marginBottom: 12 }}>Duraciones</div>
+            <table style={{ width: '100%', borderCollapse: 'collapse', font: 'var(--md-body-medium)', marginBottom: 28 }}>
+              <tbody>
+                {[['short-2','100ms','Capas de estado'],['short-4','200ms','Valor de slider'],['medium-2','300ms','Bloqueado ↔ desbloqueado'],['long-2','500ms','Hoja modal']].map(([a, b, c]) => (
+                  <tr key={a}>
+                    <td style={{ padding: '8px 0', borderBottom: '1px solid var(--md-outline-variant)', width: 130 }}><code>{a}</code></td>
+                    <td style={{ borderBottom: '1px solid var(--md-outline-variant)', width: 80 }}>{b}</td>
+                    <td style={{ borderBottom: '1px solid var(--md-outline-variant)', color: 'var(--md-on-surface-variant)' }}>{c}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div style={{ font: 'var(--md-label-large)', marginBottom: 12 }}>Capas de estado</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
+              {[['Reposo', 0], ['Hover', 8], ['Foco', 10], ['Pulsado', 10]].map(([l, o]) => (
+                <div key={l} style={{ borderRadius: 8, padding: 16, background: 'color-mix(in srgb, var(--md-on-surface) ' + o + '%, var(--md-surface-container))', font: 'var(--md-label-large)' }}>
+                  {l}<div style={{ font: 'var(--md-label-small)', color: 'var(--md-on-surface-variant)' }}>{o / 100}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Section>
+
+      <Section eyebrow="04" title="Componentes" lede="Quince componentes sobre los primitivos de Material 3, más tres propios del producto: el bloque de estado, la fila de historial y el tile de Ajustes rápidos.">
+        <div className="grid2">
+          <Card variant="outlined" padding="20px">
+            <div style={{ font: 'var(--md-label-medium)', color: 'var(--md-on-surface-variant)', marginBottom: 14 }}>Acciones</div>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 14 }}>
+              <Button variant="filled" icon="lock">Activar</Button>
+              <Button variant="tonal">Tonal</Button>
+              <Button variant="outlined">Contorno</Button>
+              <Button variant="text">Texto</Button>
+              <Button variant="danger" onClick={() => setDlg(true)}>Borrar</Button>
+              <Button variant="filled" disabled>Inactivo</Button>
+            </div>
+            <SegmentedButton value={seg} onChange={setSeg} options={[{ value: 'hoy', label: 'Hoy' }, { value: '7d', label: '7 días' }, { value: 'todo', label: 'Todo' }]} />
+          </Card>
+          <Card variant="outlined" padding="20px">
+            <div style={{ font: 'var(--md-label-medium)', color: 'var(--md-on-surface-variant)', marginBottom: 14 }}>Controles</div>
+            <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 8 }}>
+              <Switch size="large" checked={sw} onChange={setSw} onColor="var(--vl-locked)" />
+              <Switch checked={sw} onChange={setSw} />
+              <Switch checked={false} />
+              <Switch checked disabled />
+              <IconButton icon="filter_list" label="Filtrar" />
+              <IconButton icon="history" label="Historial" selected />
+            </div>
+            <VolumeSlider icon="volume_up" label="Música" value={vol} max={15} onChange={setVol} />
+          </Card>
+          <Card variant="outlined" padding="20px">
+            <div style={{ font: 'var(--md-label-medium)', color: 'var(--md-on-surface-variant)', marginBottom: 14 }}>Estado y avisos</div>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 14 }}>
+              <StatusBadge tone="locked">Bloqueado</StatusBadge>
+              <StatusBadge tone="unlocked">Desbloqueado</StatusBadge>
+              <StatusBadge tone="warning">Permiso pendiente</StatusBadge>
+            </div>
+            <div style={{ display: 'grid', gap: 10 }}>
+              <Banner icon="accessibility_new" title="Falta el permiso de Accesibilidad" action="Abrir ajustes">Sin este permiso, VolumeLock no puede detectar los cambios de volumen.</Banner>
+              <Banner resolved title="Optimización de batería desactivada">VolumeLock seguirá vigilando con la pantalla apagada.</Banner>
+            </div>
+          </Card>
+          <Card variant="outlined" padding="20px">
+            <div style={{ font: 'var(--md-label-medium)', color: 'var(--md-on-surface-variant)', marginBottom: 14 }}>Listas e historial</div>
+            <ListItem icon="alarm" headline="Alarma" supporting="Fijado en 6 / 7" trailing={<Switch checked />} />
+            <div style={{ height: 1, background: 'var(--md-outline-variant)', margin: '8px 0' }}></div>
+            <LogEntry time="14:02" stream="musica" streamLabel="Música" from={12} to={7} reverted />
+            <LogEntry time="13:41" stream="alarma" streamLabel="Alarma" from={6} to={7} />
+            <LogEntry time="09:20" stream="llamada" streamLabel="Llamada" from={4} to={2} reverted />
+          </Card>
+        </div>
+        <div style={{ position: 'relative', marginTop: 24, minHeight: dlg ? 260 : 0, borderRadius: 12, overflow: 'hidden', background: dlg ? 'var(--md-surface-container-low)' : 'transparent' }}>
+          <Dialog open={dlg} icon="delete" title="¿Borrar el historial?" actions={<><Button variant="text" onClick={() => setDlg(false)}>Cancelar</Button><Button variant="danger" onClick={() => setDlg(false)}>Borrar</Button></>}>
+            Se eliminarán los 218 registros guardados.
+          </Dialog>
+        </div>
+      </Section>
+
+      <Section eyebrow="05" title="Pantallas" lede="Las cuatro superficies del producto, montadas con los mismos componentes y tokens.">
+        <div className="phones"><Principal /><Historial /><Onboarding /><QuickSettings /></div>
+      </Section>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('r')).render(<App />);
+</script></body></html>

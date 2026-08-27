@@ -1,0 +1,29 @@
+<!-- @dsCard group="Components" viewport="700x260" name="Contenedores" subtitle="Tarjetas, filas de lista y diálogo modal" -->
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.20.6/babel.min.js"></script>
+<script type="text/babel" src="../../_bundle.jsx"></script>
+<style>body{padding:16px;height:228px;display:flex;align-items:center}#r{width:100%}</style>
+</head><body><div id="r"></div>
+<script type="text/babel">
+const NS = window.VL;
+const { Card, ListItem, Dialog, Button, Switch } = NS;
+function Demo(){ return (
+  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px',alignItems:'start'}}>
+    <div style={{display:'grid',gap:'8px'}}>
+      <Card variant="filled"><ListItem icon="alarm" headline="Alarma" supporting="Fijado en 6 / 7" trailing={<Switch checked />} /></Card>
+      <Card variant="outlined"><ListItem icon="ring_volume" headline="Llamada" supporting="Fijado en 4 / 5" /></Card>
+      <Card variant="elevated" padding="12px"><span style={{font:'var(--md-body-medium)'}}>Tarjeta elevada</span></Card>
+    </div>
+    <div style={{position:'relative',height:'204px',borderRadius:'12px',overflow:'hidden',background:'var(--md-surface-container-low)'}}>
+      <Dialog open icon="delete" title="¿Borrar el historial?"
+        actions={<><Button variant="text">Cancelar</Button><Button variant="danger">Borrar</Button></>}>
+        Se eliminarán los 218 registros guardados.
+      </Dialog>
+    </div>
+  </div>); }
+ReactDOM.createRoot(document.getElementById('r')).render(<Demo />);
+</script></body></html>

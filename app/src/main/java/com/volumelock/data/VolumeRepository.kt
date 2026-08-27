@@ -29,8 +29,14 @@ class VolumeRepository(private val dataStore: DataStore<Preferences>) {
     /** Estado del candado. Por defecto false (desbloqueado). */
     val lockState: Flow<Boolean> = dataStore.data.map { it[LOCK_KEY] ?: false }
 
+    /** Instante (epoch millis) en que se activó el candado, o null si está inactivo. */
+    val lockSince: Flow<Long?> = dataStore.data.map { it[LOCK_SINCE_KEY] }
+
     suspend fun setLockState(active: Boolean) {
-        dataStore.edit { it[LOCK_KEY] = active }
+        dataStore.edit {
+            it[LOCK_KEY] = active
+            if (active) it[LOCK_SINCE_KEY] = System.currentTimeMillis() else it.remove(LOCK_SINCE_KEY)
+        }
     }
 
     /** Volumen objetivo de un stream, o null si nunca se configuró. */
@@ -50,6 +56,7 @@ class VolumeRepository(private val dataStore: DataStore<Preferences>) {
 
     companion object {
         private val LOCK_KEY = booleanPreferencesKey("lock_active")
+        private val LOCK_SINCE_KEY = androidx.datastore.preferences.core.longPreferencesKey("lock_since")
         private fun targetKey(stream: VolumeStream) = intPreferencesKey("target_${stream.name}")
     }
 }

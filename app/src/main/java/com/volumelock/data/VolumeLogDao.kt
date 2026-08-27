@@ -23,6 +23,9 @@ interface VolumeLogDao {
     @Query("SELECT COUNT(*) FROM volume_log")
     suspend fun count(): Int
 
+    @Query("DELETE FROM volume_log")
+    suspend fun clear()
+
     /** Deja solo los `limit` registros más recientes. Devuelve cuántas filas borró. */
     @Query(
         "DELETE FROM volume_log WHERE id NOT IN " +

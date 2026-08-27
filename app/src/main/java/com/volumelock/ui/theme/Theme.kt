@@ -1,34 +1,27 @@
 package com.volumelock.ui.theme
 
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.CompositionLocalProvider
 
-private val DarkColors = darkColorScheme()
-private val LightColors = lightColorScheme()
-
+/**
+ * Tema fijo índigo del design system (sin dynamic color: la app necesita que el
+ * verde "bloqueado" y el índigo "acción" no se contaminen con el wallpaper).
+ */
 @Composable
 fun VolumeLockTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-        darkTheme -> DarkColors
-        else -> LightColors
+    val colorScheme = if (darkTheme) DarkColors else LightColors
+    val vlColors = if (darkTheme) DarkVlColors else LightVlColors
+
+    CompositionLocalProvider(LocalVlColors provides vlColors) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = AppTypography,
+            content = content,
+        )
     }
-    MaterialTheme(
-        colorScheme = colorScheme,
-        content = content
-    )
 }

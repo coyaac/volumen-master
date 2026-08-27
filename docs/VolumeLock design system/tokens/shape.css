@@ -1,0 +1,15 @@
+:root {
+  --md-shape-none: 0px;
+  --md-shape-xs: 4px;
+  --md-shape-sm: 8px;
+  --md-shape-md: 12px;
+  --md-shape-lg: 16px;
+  --md-shape-xl: 28px;
+  --md-shape-full: 999px;
+
+  /* Formas por componente */
+  --vl-shape-card: var(--md-shape-md);
+  --vl-shape-hero: var(--md-shape-xl);
+  --vl-shape-button: var(--md-shape-full);
+  --vl-shape-sheet: var(--md-shape-xl);
+}

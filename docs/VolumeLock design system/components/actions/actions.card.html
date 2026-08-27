@@ -1,0 +1,29 @@
+<!-- @dsCard group="Components" viewport="700x170" name="Acciones" subtitle="Botones, botón de icono y control segmentado" -->
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.20.6/babel.min.js"></script>
+<script type="text/babel" src="../../_bundle.jsx"></script>
+<style>body{padding:16px;height:138px;display:flex;align-items:center}#r{width:100%}</style>
+</head><body><div id="r"></div>
+<script type="text/babel">
+const NS = window.VL;
+const { Button, IconButton, SegmentedButton } = NS;
+function Demo(){ const [v,setV]=React.useState('7d'); return (
+  <div style={{display:'grid',gap:'12px'}}>
+    <div style={{display:'flex',gap:'8px',alignItems:'center',flexWrap:'wrap'}}>
+      <Button variant="filled" icon="lock">Activar</Button>
+      <Button variant="tonal">Tonal</Button>
+      <Button variant="outlined">Contorno</Button>
+      <Button variant="text">Texto</Button>
+      <Button variant="danger">Borrar</Button>
+      <Button variant="filled" disabled>Inactivo</Button>
+      <IconButton icon="filter_list" label="Filtrar" />
+      <IconButton icon="history" label="Historial" selected />
+    </div>
+    <SegmentedButton value={v} onChange={setV} options={[{value:'hoy',label:'Hoy'},{value:'7d',label:'7 días'},{value:'todo',label:'Todo'}]} />
+  </div>); }
+ReactDOM.createRoot(document.getElementById('r')).render(<Demo />);
+</script></body></html>

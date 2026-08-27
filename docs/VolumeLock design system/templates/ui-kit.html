@@ -1,0 +1,126 @@
+<!-- @dsCard group="Templates" viewport="1400x900" name="UI kit VolumeLock" subtitle="Principal, Historial, Onboarding y Quick Settings" -->
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>UI kit — VolumeLock</title>
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.20.6/babel.min.js"></script>
+<script type="text/babel" src="../_bundle.jsx"></script>
+<style>
+body{padding:24px;background:var(--md-surface-dim)}
+.screens{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
+.phone{width:360px;height:820px;background:var(--md-surface);border-radius:28px;overflow:hidden;display:flex;flex-direction:column;position:relative;box-shadow:var(--md-elevation-2)}
+.body>*{min-width:0}
+.body{min-width:0;flex:1;overflow-y:auto;scrollbar-width:none;padding:0 var(--vl-screen-margin) var(--md-space-4)}
+.body::-webkit-scrollbar{display:none}
+.cap{font:var(--md-label-large);color:var(--md-on-surface-variant);margin-bottom:8px}
+.status{height:28px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font:var(--md-label-medium);color:var(--md-on-surface-variant)}
+</style></head>
+<body><div id="r"></div>
+<script type="text/babel">
+const { Button, IconButton, SegmentedButton, Switch, VolumeSlider, Card, ListItem, StatusBadge, Banner, TopAppBar, NavigationBar, LockHero, LogEntry, QsTile } = window.VL;
+
+function Phone({ label, children }) {
+  return <div><div className="cap">{label}</div><div className="phone">
+    <div className="status"><span>9:41</span><span style={{display:'flex',gap:'4px'}}><span className="md-icon" style={{fontSize:'14px'}}>signal_cellular_alt</span><span className="md-icon" style={{fontSize:'14px'}}>battery_full</span></span></div>
+    {children}</div></div>;
+}
+
+function Principal() {
+  const [on, setOn] = React.useState(true);
+  const [m, setM] = React.useState(12), [ll, setLl] = React.useState(4), [n, setN] = React.useState(5), [a, setA] = React.useState(6);
+  return <Phone label="1 · Principal">
+    <TopAppBar title="VolumeLock" actions={<IconButton icon="settings" label="Ajustes" />} />
+    <div className="body" style={{display:'grid',gap:'var(--md-space-4)',alignContent:'start'}}>
+      <LockHero locked={on} since="08:14" onToggle={setOn} />
+      <div style={{display:'flex',gap:'var(--md-space-2)'}}>
+        <StatusBadge tone="info">3 cambios hoy</StatusBadge>
+        <StatusBadge tone={on ? 'locked' : 'unlocked'}>{on ? '4 streams fijos' : 'Sin vigilancia'}</StatusBadge>
+      </div>
+      <Card variant="filled" padding="var(--md-space-4)">
+        <div style={{font:'var(--md-title-medium)',letterSpacing:'var(--md-tracking-title-medium)',marginBottom:'var(--md-space-3)'}}>Volumen objetivo</div>
+        <div style={{display:'grid',gap:'var(--md-space-2)'}}>
+          <VolumeSlider icon="volume_up" label="Música" value={m} max={15} onChange={setM} />
+          <VolumeSlider icon="ring_volume" label="Llamada" value={ll} max={5} onChange={setLl} />
+          <VolumeSlider icon="notifications" label="Notificación" value={n} max={7} onChange={setN} />
+          <VolumeSlider icon="alarm" label="Alarma" value={a} max={7} onChange={setA} />
+        </div>
+      </Card>
+      <Button variant="outlined" icon="tune" fullWidth>Fijar con el volumen actual</Button>
+    </div>
+    <NavigationBar value="lock" items={[{value:'lock',label:'Candado',icon:'lock'},{value:'log',label:'Historial',icon:'history'},{value:'set',label:'Ajustes',icon:'settings'}]} />
+  </Phone>;
+}
+
+const LOG = [
+  ['14:02','musica','Música',12,7,true],['13:41','alarma','Alarma',6,7,false],
+  ['11:08','musica','Música',12,15,true],['10:55','notificacion','Notificación',5,0,true],
+  ['09:20','llamada','Llamada',4,2,true],['08:14','musica','Música',9,12,false]
+];
+
+function Historial() {
+  const [r, setR] = React.useState('hoy');
+  return <Phone label="2 · Historial">
+    <TopAppBar title="Historial" leading={<IconButton icon="arrow_back" label="Volver" />} actions={<IconButton icon="delete" label="Borrar historial" />} />
+    <div className="body" style={{display:'grid',gap:'var(--md-space-4)',alignContent:'start'}}>
+      <SegmentedButton value={r} onChange={setR} options={[{value:'hoy',label:'Hoy'},{value:'7d',label:'7 días'},{value:'todo',label:'Todo'}]} />
+      <div style={{font:'var(--md-label-large)',color:'var(--md-on-surface-variant)'}}>Miércoles, 27 de agosto · 6 cambios</div>
+      <Card variant="filled" padding="var(--md-space-2) 0">
+        {LOG.map((e,i) => <LogEntry key={i} time={e[0]} stream={e[1]} streamLabel={e[2]} from={e[3]} to={e[4]} reverted={e[5]} />)}
+      </Card>
+      <div style={{font:'var(--md-body-small)',color:'var(--md-on-surface-variant)',textAlign:'center'}}>5 revertidos · 1 permitido</div>
+    </div>
+    <NavigationBar value="log" items={[{value:'lock',label:'Candado',icon:'lock'},{value:'log',label:'Historial',icon:'history'},{value:'set',label:'Ajustes',icon:'settings'}]} />
+  </Phone>;
+}
+
+function Onboarding() {
+  return <Phone label="3 · Onboarding y permisos">
+    <TopAppBar title="Permisos" />
+    <div className="body" style={{display:'grid',gap:'var(--md-space-4)',alignContent:'start'}}>
+      <div style={{font:'var(--md-headline-small)'}}>Dos permisos y listo</div>
+      <div style={{font:'var(--md-body-medium)',color:'var(--md-on-surface-variant)'}}>VolumeLock necesita observar el volumen del sistema y seguir despierto en segundo plano. Los avisos desaparecen cuando los resuelves.</div>
+      <Banner icon="accessibility_new" title="Falta el permiso de Accesibilidad" action="Abrir ajustes">
+        Sin este permiso, VolumeLock no puede detectar los cambios de volumen.
+      </Banner>
+      <Banner resolved title="Optimización de batería desactivada">
+        VolumeLock seguirá vigilando con la pantalla apagada.
+      </Banner>
+      <Card variant="outlined" padding="var(--md-space-2) 0">
+        <ListItem icon="lock" headline="Activar el candado al iniciar" supporting="Se bloquea solo al encender el móvil" trailing={<Switch checked />} />
+        <ListItem icon="dashboard_customize" headline="Añadir a Ajustes rápidos" supporting="Toggle desde el panel desplegable" trailing={<Switch checked />} />
+      </Card>
+      <Button variant="filled" fullWidth disabled>Continuar</Button>
+    </div>
+  </Phone>;
+}
+
+function QuickSettings() {
+  return <Phone label="4 · Quick Settings Tile">
+    <div style={{flex:1,background:'var(--md-surface-container-low)',padding:'var(--md-space-4)',display:'grid',gap:'var(--md-space-4)',alignContent:'start'}}>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'var(--md-space-2)'}}>
+        <QsTile active />
+        <div style={{display:'flex',alignItems:'center',gap:'12px',width:'100%',maxWidth:'176px',minWidth:0,height:'80px',padding:'16px',borderRadius:'var(--md-shape-xl)',background:'var(--md-surface-container-highest)',color:'var(--md-on-surface-variant)'}}>
+          <span className="md-icon filled" style={{fontSize:'24px'}}>wifi</span>
+          <div style={{font:'var(--md-label-large)'}}>Wi-Fi</div>
+        </div>
+        <div style={{display:'flex',alignItems:'center',gap:'12px',width:'100%',maxWidth:'176px',minWidth:0,height:'80px',padding:'16px',borderRadius:'var(--md-shape-xl)',background:'var(--md-surface-container-highest)',color:'var(--md-on-surface-variant)'}}>
+          <span className="md-icon filled" style={{fontSize:'24px'}}>bluetooth</span>
+          <div style={{font:'var(--md-label-large)'}}>Bluetooth</div>
+        </div>
+        <QsTile />
+      </div>
+      <div style={{font:'var(--md-label-large)',color:'var(--md-on-surface-variant)',marginTop:'var(--md-space-2)'}}>Estados del tile</div>
+      <div style={{display:'grid',gap:'var(--md-space-2)'}}>
+        <QsTile active state="Bloqueado · 4 streams" />
+        <QsTile state="Sin permiso" />
+      </div>
+      <div style={{font:'var(--md-body-small)',color:'var(--md-on-surface-variant)'}}>El tile refleja el mismo verde del bloque de estado. Un toque alterna el candado sin abrir la app.</div>
+    </div>
+  </Phone>;
+}
+
+ReactDOM.createRoot(document.getElementById('r')).render(
+  <div className="screens"><Principal /><Historial /><Onboarding /><QuickSettings /></div>
+);
+</script></body></html>

@@ -1,0 +1,28 @@
+<!-- @dsCard group="Components" viewport="700x250" name="Comunicación" subtitle="Avisos de permiso y etiquetas de estado" -->
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.20.6/babel.min.js"></script>
+<script type="text/babel" src="../../_bundle.jsx"></script>
+<style>body{padding:16px;height:218px;display:flex;align-items:center}#r{width:100%}</style>
+</head><body><div id="r"></div>
+<script type="text/babel">
+const NS = window.VL;
+const { Banner, StatusBadge } = NS;
+function Demo(){ return (
+  <div style={{display:'grid',gap:'10px'}}>
+    <div style={{display:'flex',gap:'8px',flexWrap:'wrap'}}>
+      <StatusBadge tone="locked">Bloqueado</StatusBadge>
+      <StatusBadge tone="unlocked">Desbloqueado</StatusBadge>
+      <StatusBadge tone="warning">Permiso pendiente</StatusBadge>
+      <StatusBadge tone="info">4 cambios hoy</StatusBadge>
+    </div>
+    <Banner icon="accessibility_new" title="Falta el permiso de Accesibilidad" action="Abrir ajustes">
+      Sin este permiso, VolumeLock no puede detectar los cambios de volumen.
+    </Banner>
+    <Banner resolved title="Optimización de batería desactivada">VolumeLock seguirá vigilando con la pantalla apagada.</Banner>
+  </div>); }
+ReactDOM.createRoot(document.getElementById('r')).render(<Demo />);
+</script></body></html>
