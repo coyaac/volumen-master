@@ -64,10 +64,10 @@ fun PermissionsScreen(viewModel: VolumeViewModel, modifier: Modifier = Modifier)
 
         Banner(
             title = if (accessibility) "Permiso de Accesibilidad activo" else "Falta el permiso de Accesibilidad",
-            body = if (accessibility) "VolumeLock puede detectar y bloquear los cambios de volumen." else "Sin este permiso, VolumeLock no puede detectar los cambios de volumen.",
+            body = if (accessibility) "VolumeLock puede detectar y bloquear los cambios de volumen." else "Sin este permiso, VolumeLock no puede detectar los cambios de volumen. El botón te lleva a la lista: busca VolumeLock y actívalo.",
             resolved = accessibility,
             icon = Icons.Rounded.AccessibilityNew,
-            actionLabel = "Abrir ajustes",
+            actionLabel = if (accessibility) "Quitar acceso" else "Activar accesibilidad",
             onAction = viewModel::openAccessibilitySettings,
         )
 
@@ -76,16 +76,16 @@ fun PermissionsScreen(viewModel: VolumeViewModel, modifier: Modifier = Modifier)
             body = if (battery) "VolumeLock seguirá vigilando con la pantalla apagada." else "Márcala como sin restricciones para que el sistema no cierre el servicio.",
             resolved = battery,
             icon = Icons.Rounded.BatterySaver,
-            actionLabel = "Abrir ajustes",
+            actionLabel = if (battery) "Volver a restringir" else "Quitar restricción",
             onAction = viewModel::requestIgnoreBatteryOptimizations,
         )
 
         Banner(
             title = if (dnd) "Acceso a No molestar concedido" else "Falta acceso a No molestar",
-            body = if (dnd) "VolumeLock puede fijar el volumen de llamada y notificación." else "Sin este acceso, VolumeLock no puede fijar el volumen de llamada ni notificación (multimedia y alarma sí).",
+            body = if (dnd) "VolumeLock puede fijar el volumen de llamada y notificación. El botón abre la lista por si quieres quitarlo." else "Sin este acceso no se puede fijar llamada ni notificación (multimedia y alarma sí). El botón abre la lista: busca VolumeLock y actívalo.",
             resolved = dnd,
             icon = Icons.Rounded.DoNotDisturbOn,
-            actionLabel = "Abrir ajustes",
+            actionLabel = if (dnd) "Quitar acceso" else "Activar No molestar",
             onAction = viewModel::openDndAccessSettings,
         )
 

@@ -223,7 +223,7 @@ fun Banner(
         Column(modifier = Modifier.weight(1f)) {
             Text(title, style = MaterialTheme.typography.titleMedium, color = fg)
             Text(body, style = MaterialTheme.typography.bodyMedium, color = fg, modifier = Modifier.padding(top = 4.dp))
-            if (!resolved && actionLabel != null && onAction != null) {
+            if (actionLabel != null && onAction != null) {
                 Spacer(Modifier.height(12.dp))
                 OutlinedButton(onClick = onAction) { Text(actionLabel) }
             }

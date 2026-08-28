@@ -114,6 +114,12 @@ class VolumeViewModel(app: Application) : AndroidViewModel(app) {
         return nm.isNotificationPolicyAccessGranted
     }
 
+    /**
+     * Abre la lista de "Acceso a No molestar" (mismo lugar para conceder o quitar).
+     * Android no permite otorgar este acceso por código ni saltar directo al interruptor
+     * de la app con una API pública, así que solo podemos abrir la lista; la guía en la
+     * tarjeta le dice al usuario que busque VolumeLock y lo active.
+     */
     fun openDndAccessSettings() {
         launchSettings(Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS))
     }
@@ -128,15 +134,26 @@ class VolumeViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun requestIgnoreBatteryOptimizations() {
-        val intent = Intent(
-            Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
-            android.net.Uri.parse("package:${getApplication<Application>().packageName}")
+        // Si ya está sin restricciones, abre la lista para poder volver a restringir.
+        if (isBatteryUnrestricted()) {
+            launchSettings(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))
+            return
+        }
+        launchSettings(
+            Intent(
+                Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+                android.net.Uri.parse("package:${getApplication<Application>().packageName}")
+            )
         )
-        launchSettings(intent)
     }
 
     private fun launchSettings(intent: Intent) {
+        tryLaunch(intent)
+    }
+
+    /** Abre unos ajustes; devuelve false si el dispositivo no tiene esa pantalla. */
+    private fun tryLaunch(intent: Intent): Boolean {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        getApplication<Application>().startActivity(intent)
+        return runCatching { getApplication<Application>().startActivity(intent) }.isSuccess
     }
 }

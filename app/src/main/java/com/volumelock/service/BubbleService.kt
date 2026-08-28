@@ -13,6 +13,7 @@ import android.graphics.PixelFormat
 import android.media.AudioManager
 import android.os.Build
 import android.os.IBinder
+import android.os.SystemClock
 import android.provider.Settings
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -53,6 +54,7 @@ class BubbleService : Service() {
     private var bubbleView: ImageView? = null
     private var panelView: View? = null
     private var deleteView: View? = null
+    private var panelClosedAt = 0L
     private lateinit var bubbleParams: WindowManager.LayoutParams
 
     override fun onCreate() {
@@ -213,6 +215,9 @@ class BubbleService : Service() {
 
     private fun togglePanel() {
         if (panelView != null) { collapsePanel(); return }
+        // El toque en el globo que cierra el panel (ACTION_OUTSIDE) también dispara este
+        // togglePanel en el UP; si acaba de cerrarse, no lo reabras en el mismo gesto.
+        if (SystemClock.uptimeMillis() - panelClosedAt < 250) return
         val panel = LayoutInflater.from(this).inflate(R.layout.bubble_panel, null)
         bindSlider(panel, R.id.sb_music, AudioManager.STREAM_MUSIC)
         bindSlider(panel, R.id.sb_ring, AudioManager.STREAM_RING)
@@ -220,26 +225,45 @@ class BubbleService : Service() {
         bindSlider(panel, R.id.sb_alarm, AudioManager.STREAM_ALARM)
         bindLockSwitch(panel.findViewById(R.id.sw_lock))
         panel.findViewById<View>(R.id.panel_close).setOnClickListener { collapsePanel() }
+        // Cierra al tocar fuera del panel (FLAG_WATCH_OUTSIDE_TOUCH entrega ACTION_OUTSIDE).
+        panel.setOnTouchListener { _, e ->
+            if (e.action == MotionEvent.ACTION_OUTSIDE) { collapsePanel(); true } else false
+        }
 
         val screenW = resources.displayMetrics.widthPixels
+        val panelX = bubbleParams.x.coerceIn(0, (screenW - dp(300)).coerceAtLeast(0))
         val params = WindowManager.LayoutParams(
             dp(300),
             WindowManager.LayoutParams.WRAP_CONTENT,
             overlayType(),
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
             PixelFormat.TRANSLUCENT,
         ).apply {
             gravity = Gravity.TOP or Gravity.START
-            x = bubbleParams.x.coerceIn(0, (screenW - dp(300)).coerceAtLeast(0))
+            x = panelX
             y = bubbleParams.y + dp(64)
         }
         windowManager.addView(panel, params)
         panelView = panel
+
+        // Apertura tipo "genie": crece y aparece desde el punto donde está el globo.
+        panel.pivotX = (bubbleParams.x + dp(28) - panelX).toFloat().coerceIn(0f, dp(300).toFloat())
+        panel.pivotY = 0f
+        panel.scaleX = 0.3f; panel.scaleY = 0.3f; panel.alpha = 0f
+        // withLayer(): capa de hardware durante la animación (la vista se dibuja una vez
+        // a textura y solo se transforma) con restauración automática al terminar.
+        panel.animate().scaleX(1f).scaleY(1f).alpha(1f)
+            .setDuration(220).setInterpolator(DecelerateInterpolator(2f))
+            .withLayer().start()
     }
 
     private fun collapsePanel() {
-        panelView?.let { runCatching { windowManager.removeView(it) } }
+        val panel = panelView ?: return
         panelView = null
+        panelClosedAt = SystemClock.uptimeMillis()
+        panel.animate().cancel()
+        runCatching { windowManager.removeView(panel) }
     }
 
     private fun bindLockSwitch(sw: Switch) {
@@ -304,7 +328,8 @@ class BubbleService : Service() {
     private fun dp(v: Int): Int = (v * resources.displayMetrics.density).toInt()
 
     override fun onDestroy() {
-        collapsePanel()
+        panelView?.let { runCatching { windowManager.removeView(it) } }
+        panelView = null
         hideDeleteZone()
         bubbleView?.let { runCatching { windowManager.removeView(it) } }
         bubbleView = null
